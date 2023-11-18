@@ -10,11 +10,10 @@ import resources  # Import your resources package
 plugin_registry = {}
 
 def initialize_plugins(subparsers):
-    logger.debug("Initializing plugins")
+    logger.debug("Initializing all plugins in registry")
     for _, plugin_cls in plugin_registry.items():
-        print(plugin_cls)
         plugin = plugin_cls()
-        plugin.register(subparsers)
+        plugin.initialize(subparsers)
 
 def load_plugins():
     package = resources
@@ -22,11 +21,13 @@ def load_plugins():
 
     for loader, name, is_pkg in pkgutil.iter_modules(package.__path__, prefix):
         if not is_pkg:
+            logger.debug("Loading plugin %s", name)
+            # Import the plugin module
             importlib.import_module(name)
 
 def register_plugin(cls):
     """ A decorator for registering plugin classes. """
-    logger.debug("Registering plugin %s", cls.__name__)
+    logger.debug(f"Adding plugin {cls.__name__} to plugin resgistry")
     
     # Add the plugin to the registry
     plugin_registry[cls.__name__] = cls

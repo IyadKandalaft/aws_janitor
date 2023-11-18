@@ -30,6 +30,6 @@ class AWSResourceCLI(ABC):
 class Plugin(ABC):
     cli_cls = None
 
-    def register(self, subparsers):
-        logger.debug(f"Registering plugin {self.cli_cls}")
+    def initialize(self, subparsers):
+        logger.debug(f"Initializing plugin {self.cli_cls.__name__}")
         self.cli_cls.configure(subparsers)
